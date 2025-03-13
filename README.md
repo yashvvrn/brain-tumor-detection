@@ -17,8 +17,8 @@ A Flask web application that uses deep learning to detect and classify brain tum
 
 1. Clone the repository:
 ```bash
-git clone [your-repo-url]
-cd BrainTumor
+git clone https://github.com/yashvvrn/brain-tumor-detection.git
+cd brain-tumor-detection
 ```
 
 2. Install dependencies:
