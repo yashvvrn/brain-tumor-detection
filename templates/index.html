@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tumor Detection System</title>
+    <!-- Bootstrap CSS -->
+    <link 
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" 
+      rel="stylesheet" 
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" 
+      crossorigin="anonymous"
+    />
+    <style>
+      :root {
+        --primary-color: #ff6b6b; /* Elegant blue */
+        --secondary-color: #f5a623;
+        --accent-color: #ff6b6b;
+        --light-bg: #ffffff;
+        --dark-bg: #333333;
+        --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+      /* Full height for html and body */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      /* Body styling */
+      body {
+        background: 
+          linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
+          url("{{ url_for('static', filename='bg.webp') }}");
+        background-size: cover;
+        background-attachment: fixed;
+        color: var(--dark-bg);
+        font-family: var(--font-family);
+      }
+      /* Main area styling: add top and bottom padding to prevent content from being hidden behind fixed navbar and footer */
+      main {
+        padding-top: 60px; /* Adjust based on the navbar height */
+        padding-bottom: 40px; /* Adjust based on the footer height */
+      }
+      /* Fixed Navbar styling */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        z-index: 1000;
+      }
+      /* Navbar container: modified to span full width */
+      .navbar-container {
+        width: 100%;
+        margin: 0;
+        padding: 0 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .logo img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 2px solid var(--accent-color);
+      }
+      .navbar-brand {
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+      .nav-link {
+        color: #fff !important;
+        transition: color 0.3s ease;
+      }
+      .nav-link:hover {
+        color: var(--accent-color) !important;
+      }
+      /* Home link styling: increased size and hover zoom effect */
+      .home-link {
+        font-size: 1.3rem;
+        transition: transform 0.3s ease;
+      }
+      .home-link:hover {
+        transform: scale(1.1);
+      }
+      /* Hero Section */
+      #hero-title {
+        color: #000;
+        font-weight: bold;
+        padding-bottom: 10px;
+      }
+      /* Card form container with increased shadow */
+      .card-form {
+        background-color: var(--light-bg);
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.3); /* Increased shadow */
+        margin: 40px auto;
+        max-width: 800px;
+      }
+      /* Result section styling */
+      #results {
+        margin-top: 40px;
+      }
+      #results .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.3); /* Increased shadow */
+      }
+      #results .card-body {
+        background-color: #f8f9fa;
+        border-radius: 15px;
+        padding: 30px;
+      }
+      /* Form & Buttons */
+      .btn-primary {
+        background-color: var(--primary-color);
+        border: none;
+        border-radius: 30px;
+        transition: filter 0.3s ease;
+      }
+      .btn-primary:hover {
+        filter: brightness(0.9);
+      }
+      .btn-danger {
+        background-color: var(--accent-color);
+        border: none;
+        border-radius: 30px;
+        transition: filter 0.3s ease;
+      }
+      .btn-danger:hover {
+        filter: brightness(0.9);
+      }
+      .form-control {
+        border-radius: 10px;
+        border: 1px solid #ccc;
+      }
+      .form-control:focus {
+        box-shadow: none;
+        border-color: var(--primary-color);
+      }
+      /* Fixed Footer styling with reduced height */
+      footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+        color: #fff;
+        padding: 2px 0;
+        text-align: center;
+        border-top: 1px solid var(--accent-color);
+        z-index: 1000;
+      }
+      .footer-container {
+        max-width: 400px;
+        margin: auto;
+      }
+      /* MRI image result styling */
+      #results img {
+        max-height: 400px;
+        margin-top: 15px;
+      }
+      /* Responsive adjustments */
+      @media (max-width: 576px) {
+        .navbar-container {
+          padding: 0 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container navbar-container">
+        <div class="d-flex align-items-center">
+          <!-- Logo & Brand on the left -->
+          <div class="logo">
+            <img class="myimg" src="{{ url_for('static', filename='logo.png') }}" alt="Logo" />
+          </div>
+          <a class="navbar-brand ms-2" href="#">WellGuard - Tumor Detection</a>
+          <!-- Homepage button added next to the WellGuard text -->
+          <a class="btn btn-outline-light ms-3" href="http://127.0.0.1:8080/">Homepage</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Hero Section -->
+      <div class="container mt-5 text-center">
+        <h1 id="hero-title" class="mb-4">Brain Tumor Diagnosis</h1>
+        <p class="lead mx-auto" style="max-width: 600px;">
+          Upload your MRI Film to get a report.
+        </p>
+      </div>
+
+      <!-- File Upload Form -->
+      <div class="card-form">
+        <form method="POST" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="file" class="form-label">Select MRI Image:</label>
+            <input type="file" class="form-control" id="file" name="file" accept="image/*" required />
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg w-100">Upload and Detect</button>
+        </form>
+      </div>
+
+      {% if result %}
+      <!-- Display Results -->
+      <div class="container" id="results">
+        <div class="card text-center">
+          <div class="card-body">
+            <h4 class="card-title text-success">{{ result }}</h4>
+            <p class="card-text text-muted">Confidence: {{ confidence }}%</p>
+            <img src="{{ file_path }}" class="img-fluid rounded" alt="Uploaded Image" />
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container footer-container">
+        <p>&copy; 2025 WellGuard. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
